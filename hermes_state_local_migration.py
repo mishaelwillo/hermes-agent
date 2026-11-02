@@ -35,7 +35,8 @@ def login_owned_by(row, subject):
     only); every other caller, the host's own native peer included, still meets a foreign owner.
     """
     user_id = row.get('user_id')
-    if row['source'] != 'desktop' or not isinstance(user_id, str) or not subject:
+    # Remote Desktop backends also stored these login stamps under the TUI source label.
+    if row['source'] not in ('desktop', 'tui') or not isinstance(user_id, str) or not subject:
         return False
     from hermes_state_mutation_binding import _login_label
     return _login_label(subject) == user_id
